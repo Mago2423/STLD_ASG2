@@ -9,6 +9,7 @@ using UnityEngine.UI;
 
 public class UIManagerScript : MonoBehaviour
 {
+    public CheckPoint checkPoint;
     //the text, buttons, game objects in the UI
     public TMP_Text ScoreText;
     public TMP_Text HealthText;
@@ -215,5 +216,9 @@ public class UIManagerScript : MonoBehaviour
     {
         print("Joint Plug Used");
         JointPlug.SetActive(false);
+    }
+    public void OnRespawnButton()
+    {
+        checkPoint.LoadProgress();
     }
 }

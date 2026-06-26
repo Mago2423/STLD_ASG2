@@ -10,7 +10,7 @@ public class CollisionDetector : MonoBehaviour
     /// <summary>
     /// Increment score by this value when a coin is collected.
     /// </summary>
-    int score = 0;  //unity overights this value
+    public int score = 0;  //unity overights this value
     /// <summary>
     /// Player Health
     /// </summary>
