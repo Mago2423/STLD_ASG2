@@ -41,6 +41,7 @@ public class CheckPoint : MonoBehaviour
     /// checks for whether the power is on
     /// </summary>
     public bool saveHavePower = false;
+    public float savelapsedTime = 0f; //time spent while the game is running
 
 
 
@@ -50,7 +51,6 @@ public class CheckPoint : MonoBehaviour
     public Transform startposition;
     private Vector3 spawnpoint;
     public UnityEvent Respawn;
-    bool Checkpoint = false;
     public UIManagerScript UIManagerScript;
 
     void Start()
@@ -60,16 +60,16 @@ public class CheckPoint : MonoBehaviour
 
     void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.CompareTag("player"))
+        if (collision.transform.root.CompareTag("Player"))
         {
-            collision.gameObject.transform.root.position = spawnpoint;
             print("checkpoint updated");
-            Checkpoint = true;
+            spawnpoint = transform.position;
+            print("checkpoint updated");
             SaveProgress();
 
         }
     }
-    void SaveProgress()
+    public void SaveProgress()
     {
         savescore = collisionDetector.score;
         /// <summary>
@@ -104,12 +104,89 @@ public class CheckPoint : MonoBehaviour
         /// checks for whether the power is on
         /// </summary>
         saveHavePower = collisionDetector.HavePower;
+        savelapsedTime = UIManagerScript.elapsedTime; //time spent while the game is running
 
     }
 
     public void LoadProgress()
     {
+        Debug.Log(collisionDetector.gameObject.name);
+        Debug.Log("Spawnpoint: " + spawnpoint);
+        Debug.Log("Player before: " + collisionDetector.transform.position);
+
+        collisionDetector.transform.position = spawnpoint;
+
+        Debug.Log("Player after: " + collisionDetector.transform.position);
+        //Move player to saved position
+        collisionDetector.transform.position = spawnpoint;
+
+        CharacterController cc =
+        collisionDetector.GetComponent<CharacterController>();
+
+        Rigidbody rb =
+            collisionDetector.GetComponent<Rigidbody>();
+
+        if (cc != null)
+            cc.enabled = false;
+
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.isKinematic = true;
+        }
+
+        collisionDetector.transform.position = spawnpoint;
+
+        if (rb != null)
+            rb.isKinematic = false;
+
+        if (cc != null)
+            cc.enabled = true;
+
+
+        // Restore player values
+        collisionDetector.score = savescore;
+        collisionDetector.health = savehealth;
+        collisionDetector.itemsCollected = saveitemsCollected;
+        collisionDetector.coinsCollected = savecoinsCollected;
+        collisionDetector.healAmount = savehealAmount;
+        collisionDetector.HaveInjector = saveHaveInjector;
+        collisionDetector.HaveKeyCard = saveHaveKeyCard;
+        collisionDetector.HaveJointPlug = saveHaveJointPlug;
+        collisionDetector.HavePower = saveHavePower;
+
+        // Restore timer
+        UIManagerScript.elapsedTime = savelapsedTime;
+
+        // Update UI
+        UIManagerScript.UpdateScore(savescore);
+        UIManagerScript.UpdateHealth(savehealth);
         UIManagerScript.ItemCollected(saveitemsCollected);
+        UIManagerScript.CoinsCollected(savecoinsCollected);
+
+        // Restore icons
+        if (saveHaveInjector)
+        {
+            UIManagerScript.InjectorCollected();
+        }
+        else
+        {
+            UIManagerScript.InjectorUsed();
+        }
+        if (saveHaveKeyCard)
+            UIManagerScript.KeyCardCollected();
+        else
+        {
+            UIManagerScript.KeyCardUsed();
+        }
+
+        if (saveHaveJointPlug)
+            UIManagerScript.JointPlugCollected();
+        else
+        {
+            UIManagerScript.JointPlugUsed();
+        }
     }
 
     

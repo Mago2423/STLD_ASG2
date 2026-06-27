@@ -15,6 +15,7 @@ public class UIManagerScript : MonoBehaviour
     public TMP_Text HealthText;
     public TMP_Text GameOver;
     public Button StartButton;
+    public Button RespawnButton;
     public TMP_Text ItemText;
     public TMP_Text CoinsText;
     public TMP_Text StartText;
@@ -26,6 +27,8 @@ public class UIManagerScript : MonoBehaviour
     public GameObject MenuPanel;
     public GameObject MainUI;
     public GameObject AlertPanel;
+    private bool isGameOver = false;
+
         public float elapsedTime = 0f; //time spent while the game is running
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -46,6 +49,7 @@ public class UIManagerScript : MonoBehaviour
         KeyCard.SetActive(false);
         JointPlug.SetActive(false);
         AlertPanel.SetActive(false);
+        RespawnButton.gameObject.SetActive(false);
 
         if (MenuPanel.activeSelf)
         {
@@ -77,8 +81,9 @@ public class UIManagerScript : MonoBehaviour
     public void UpdateHealth(int health) //update healthtext with current health
     {
         HealthText.text = $"Health: {health}";
-        if (health <= 0)
+        if (health <= 0 && !isGameOver)
             {   
+                isGameOver = true;
                 HealthText.text = $"Health: 0";
                 print("Game Over");
                 Gameover();
@@ -139,6 +144,9 @@ public class UIManagerScript : MonoBehaviour
 
         MainUI.SetActive(!MainUI.activeSelf);
         print($"MainUI is now: {MainUI.activeSelf}");
+
+        RespawnButton.gameObject.SetActive(false);
+        GameOver.text = "Game";
         
         // Pause/unpause the game
         if (MenuPanel.activeSelf)
@@ -175,9 +183,18 @@ public class UIManagerScript : MonoBehaviour
 
     public void Gameover() //toggle game over screen
     {
+        RespawnButton.gameObject.SetActive(true);
         GameOver.text = "Game Over"; //change big text to say "game over"
         StartButton.gameObject.SetActive(false); //remove start button so players cant resume
-        TogglePanel(); //Open panel
+
+        //toggle UI
+        MenuPanel.SetActive(true);
+        MainUI.SetActive(false);
+
+        Time.timeScale = 0f;
+        //make cursor visible and unlock cursor
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
 
     public void Restart() //restart button on click restarts the scene
@@ -202,6 +219,7 @@ public class UIManagerScript : MonoBehaviour
         print("Key Card Obtained");
         KeyCard.SetActive(true);
     }
+    
     public void JointPlugCollected() //make icon for joint plug visible
     {
         print("Joint Plug Obtained");
@@ -217,8 +235,34 @@ public class UIManagerScript : MonoBehaviour
         print("Joint Plug Used");
         JointPlug.SetActive(false);
     }
+    public void KeyCardUsed() //make icon for key card not visible
+    {
+        print("Key Card Used");
+        KeyCard.SetActive(false);
+    }
+
     public void OnRespawnButton()
     {
+        print("save loaded");
         checkPoint.LoadProgress();
+
+        // Close game over menu
+        MenuPanel.SetActive(false);
+
+        // Show gameplay UI again
+        MainUI.SetActive(true);
+
+        // Hide respawn button
+        RespawnButton.gameObject.SetActive(false);
+
+        // Reset game over state
+        isGameOver = false;
+        GameOver.text = "Game";
+
+        // Resume game
+        Time.timeScale = 1f;
+
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 }
