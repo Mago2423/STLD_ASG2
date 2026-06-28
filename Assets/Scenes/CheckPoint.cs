@@ -52,6 +52,10 @@ public class CheckPoint : MonoBehaviour
     private Vector3 spawnpoint;
     public UnityEvent Respawn;
     public UIManagerScript UIManagerScript;
+    //key items
+    public GameObject Injector;
+    public GameObject Keycard;
+    public GameObject Jointplug;
 
     void Start()
     {
@@ -60,17 +64,22 @@ public class CheckPoint : MonoBehaviour
 
     void OnTriggerEnter(Collider collision)
     {
-        if (collision.transform.root.CompareTag("Player"))
+        if (collision.CompareTag("Player"))
         {
-            print("checkpoint updated");
+            Debug.Log("Checkpoint activated!");
             spawnpoint = transform.position;
-            print("checkpoint updated");
             SaveProgress();
-
         }
+
     }
     public void SaveProgress()
     {
+        //check for save in consol
+        Debug.Log("=== SAVING ===");
+        Debug.Log("Score: " + collisionDetector.score);
+        Debug.Log("Health: " + collisionDetector.health);
+        Debug.Log("Items: " + collisionDetector.itemsCollected);
+        Debug.Log("Coins: " + collisionDetector.coinsCollected);
         savescore = collisionDetector.score;
         /// <summary>
         /// Player Health
@@ -110,16 +119,6 @@ public class CheckPoint : MonoBehaviour
 
     public void LoadProgress()
     {
-        Debug.Log(collisionDetector.gameObject.name);
-        Debug.Log("Spawnpoint: " + spawnpoint);
-        Debug.Log("Player before: " + collisionDetector.transform.position);
-
-        collisionDetector.transform.position = spawnpoint;
-
-        Debug.Log("Player after: " + collisionDetector.transform.position);
-        //Move player to saved position
-        collisionDetector.transform.position = spawnpoint;
-
         CharacterController cc =
         collisionDetector.GetComponent<CharacterController>();
 
@@ -135,7 +134,7 @@ public class CheckPoint : MonoBehaviour
             rb.angularVelocity = Vector3.zero;
             rb.isKinematic = true;
         }
-
+        //Move player to saved position
         collisionDetector.transform.position = spawnpoint;
 
         if (rb != null)
@@ -173,12 +172,14 @@ public class CheckPoint : MonoBehaviour
         else
         {
             UIManagerScript.InjectorUsed();
+            Injector.gameObject.SetActive(true);
         }
         if (saveHaveKeyCard)
             UIManagerScript.KeyCardCollected();
         else
         {
             UIManagerScript.KeyCardUsed();
+            Keycard.gameObject.SetActive(true);
         }
 
         if (saveHaveJointPlug)
@@ -186,7 +187,13 @@ public class CheckPoint : MonoBehaviour
         else
         {
             UIManagerScript.JointPlugUsed();
+            Jointplug.gameObject.SetActive(true);
         }
+        //check for load in consol
+        Debug.Log($"Saved Score: {savescore}");
+        Debug.Log($"Saved Health: {savehealth}");
+        Debug.Log($"Saved Items: {saveitemsCollected}");
+        Debug.Log($"Saved Coins: {savecoinsCollected}");
     }
 
     

@@ -139,7 +139,7 @@ Transform:
   m_GameObject: {fileID: 1405951360031209152}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.63, y: 3.02, z: -0.05}
+  m_LocalPosition: {x: 389.84, y: 4.3216615, z: 370.10272}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -180,6 +180,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f6db83b740ad5d478a86c12193c1685, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  collisionDetector: {fileID: 0}
+  savescore: 100
+  savehealth: 100
+  saveitemsCollected: 0
+  savecoinsCollected: 0
+  savehealAmount: 20
+  saveHaveInjector: 0
+  saveHaveKeyCard: 0
+  saveHaveJointPlug: 0
+  saveHavePower: 0
+  savelapsedTime: 0
+  startposition: {fileID: 4645734762696220099}
+  Respawn:
+    m_PersistentCalls:
+      m_Calls: []
+  UIManagerScript: {fileID: 0}
+  Injector: {fileID: 0}
+  Keycard: {fileID: 0}
+  Jointplug: {fileID: 0}
 --- !u!1 &7801596320124351350
 GameObject:
   m_ObjectHideFlags: 0

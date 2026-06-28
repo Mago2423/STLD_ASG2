@@ -15,7 +15,6 @@ public class Door : MonoBehaviour
     {
         if (!isColliding && isOpen)
         {
-            print("Countdown to close door");
             time -= 1;
             if (time <= 0 && !isColliding)
             {
