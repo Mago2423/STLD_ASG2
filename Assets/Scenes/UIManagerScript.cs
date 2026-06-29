@@ -27,6 +27,7 @@ public class UIManagerScript : MonoBehaviour
     public GameObject MenuPanel;
     public GameObject MainUI;
     public GameObject AlertPanel;
+    public GameObject StartPanel;
     private bool isGameOver = false;
 
         public float elapsedTime = 0f; //time spent while the game is running
@@ -50,6 +51,7 @@ public class UIManagerScript : MonoBehaviour
         JointPlug.SetActive(false);
         AlertPanel.SetActive(false);
         RespawnButton.gameObject.SetActive(false);
+        MenuPanel.gameObject.SetActive(false);
 
         if (MenuPanel.activeSelf)
         {
@@ -264,5 +266,14 @@ public class UIManagerScript : MonoBehaviour
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+    }
+    public void OnStartButton2()
+    {
+        print("Start Button 2 Clicked");
+        StartText.text = "Resume"; //change "start" to "resume"
+        StartPanel.SetActive(false);
+        MainUI.SetActive(true);
+        TogglePanel(); //opens panel
+        AlertPanel.SetActive(false);
     }
 }
