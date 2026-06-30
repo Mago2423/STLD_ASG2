@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 public class CheckPoint : MonoBehaviour
 
@@ -56,6 +57,9 @@ public class CheckPoint : MonoBehaviour
     public GameObject Injector;
     public GameObject Keycard;
     public GameObject Jointplug;
+    public GameObject spawnInjector;
+    public GameObject spawnKeycard;
+    public GameObject spawnJointplug;
 
     
 
@@ -166,7 +170,7 @@ public class CheckPoint : MonoBehaviour
         UIManagerScript.ItemCollected(saveitemsCollected);
         UIManagerScript.CoinsCollected(savecoinsCollected);
 
-        // Restore icons
+        // Restore icons and objects
         if (saveHaveInjector)
         {
             UIManagerScript.InjectorCollected();
@@ -174,14 +178,14 @@ public class CheckPoint : MonoBehaviour
         else
         {
             UIManagerScript.InjectorUsed();
-            Injector.gameObject.SetActive(true);
+            Injector.GetComponent<Collectible>().Respawn();
         }
         if (saveHaveKeyCard)
             UIManagerScript.KeyCardCollected();
         else
         {
             UIManagerScript.KeyCardUsed();
-            Keycard.gameObject.SetActive(true);
+            Keycard.GetComponent<Collectible>().Respawn();
         }
 
         if (saveHaveJointPlug)
@@ -189,7 +193,7 @@ public class CheckPoint : MonoBehaviour
         else
         {
             UIManagerScript.JointPlugUsed();
-            Jointplug.gameObject.SetActive(true);
+            Jointplug.GetComponent<Collectible>().Respawn();
         }
         //check for load in consol
         Debug.Log($"Saved Score: {savescore}");

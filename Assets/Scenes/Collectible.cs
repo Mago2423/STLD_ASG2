@@ -43,4 +43,13 @@ public class Collectible : MonoBehaviour
         var animator = GetComponent<Animator>(); 
         animator.SetTrigger("Fly"); //play animation
     }
+    public void Respawn()
+    {
+        timer = hideDelay;
+        startTimer = false;
+
+        GetComponent<CapsuleCollider>().enabled = true;
+
+        gameObject.SetActive(true);
+    }
 }
