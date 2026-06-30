@@ -28,12 +28,18 @@ public class UIManagerScript : MonoBehaviour
     public GameObject MainUI;
     public GameObject AlertPanel;
     public GameObject StartPanel;
+    public GameObject OptionsPage;
+    public GameObject CreditPage;
+    public GameObject HowToPlayPage;
     private bool isGameOver = false;
+    bool menuOpen = false;
+    
 
         public float elapsedTime = 0f; //time spent while the game is running
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        menuOpen = MenuPanel.activeSelf || StartPanel.activeSelf;
         //setting all the UI value to thier devualt value and text
         ScoreText.text = "Score: 0";
         HealthText.text = "Health: 100";
@@ -44,16 +50,21 @@ public class UIManagerScript : MonoBehaviour
         TimerText.text = "Time: 0";
         AlertText.text = "Alert";
         //hiding the panels and buttons
-        StartButton.gameObject.SetActive(true);
+        StartButton.gameObject.SetActive(false);
         MainUI.SetActive(false);
         Injector.SetActive(false);
         KeyCard.SetActive(false);
         JointPlug.SetActive(false);
         AlertPanel.SetActive(false);
         RespawnButton.gameObject.SetActive(false);
-        MenuPanel.gameObject.SetActive(false);
+        MenuPanel.SetActive(false);
+        StartPanel.SetActive(true);
+        OptionsPage.SetActive(false);
+        CreditPage.SetActive(false);
+        HowToPlayPage.SetActive(false);
 
-        if (MenuPanel.activeSelf)
+        //when menuepanel is visible, the cursor is visible and if menupanel is not visible, the cursor is locked
+        if (menuOpen)
         {
             Time.timeScale = 0f;  // Pause everything
         }
@@ -61,9 +72,10 @@ public class UIManagerScript : MonoBehaviour
         {
             Time.timeScale = 1f;  // Resume normal speed
         }
-        //when menuepanel is visible, the cursor is visible and if menupanel is not visible, the cursor is locked
-        Cursor.visible = MenuPanel.activeSelf;
-        Cursor.lockState = MenuPanel.activeSelf ? CursorLockMode.None : CursorLockMode.Locked;
+        
+
+        Cursor.visible = menuOpen;
+        Cursor.lockState = menuOpen ? CursorLockMode.None : CursorLockMode.Locked;
     }
 
     void Update()
@@ -149,6 +161,7 @@ public class UIManagerScript : MonoBehaviour
 
         RespawnButton.gameObject.SetActive(false);
         GameOver.text = "Game";
+        StartButton.gameObject.SetActive(true);
         
         // Pause/unpause the game
         if (MenuPanel.activeSelf)
@@ -160,6 +173,7 @@ public class UIManagerScript : MonoBehaviour
             Time.timeScale = 1f;  // Resume normal speed
         }
         
+
         Cursor.visible = MenuPanel.activeSelf;
         Cursor.lockState = MenuPanel.activeSelf ? CursorLockMode.None : CursorLockMode.Locked;
     }
@@ -247,33 +261,59 @@ public class UIManagerScript : MonoBehaviour
     {
         print("save loaded");
         checkPoint.LoadProgress();
-
+        StartPanel.SetActive(false);
         // Close game over menu
         MenuPanel.SetActive(false);
-
         // Show gameplay UI again
         MainUI.SetActive(true);
-
         // Hide respawn button
         RespawnButton.gameObject.SetActive(false);
-
         // Reset game over state
         isGameOver = false;
         GameOver.text = "Game";
-
         // Resume game
         Time.timeScale = 1f;
-
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
     public void OnStartButton2()
     {
         print("Start Button 2 Clicked");
-        StartText.text = "Resume"; //change "start" to "resume"
+        StartButton.gameObject.SetActive(true);
         StartPanel.SetActive(false);
         MainUI.SetActive(true);
         TogglePanel(); //opens panel
         AlertPanel.SetActive(false);
+    }
+    public void OnOptionsClick()
+    {
+        OptionsPage.SetActive(true);
+        StartPanel.SetActive(false);
+        Time.timeScale = 0f;  // Pause everything
+    }
+    public void OnCreditClick()
+    {
+        CreditPage.SetActive(true);
+        StartPanel.SetActive(false);
+        Time.timeScale = 0f;  // Pause everything
+    }
+    public void OnHowToPlayClick()
+    {
+        HowToPlayPage.SetActive(true);
+        StartPanel.SetActive(false);
+        Time.timeScale = 0f;  // Pause everything
+    }
+    public void OnBackToStartPanel()
+    {
+        StartPanel.SetActive(true);
+        HowToPlayPage.SetActive(false);
+        CreditPage.SetActive(false);
+        OptionsPage.SetActive(false);
+        MenuPanel.SetActive(false);
+    }
+    public void OnQuit()
+    {
+        print("Quit");
+        Application.Quit();
     }
 }

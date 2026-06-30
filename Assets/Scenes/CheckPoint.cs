@@ -57,6 +57,8 @@ public class CheckPoint : MonoBehaviour
     public GameObject Keycard;
     public GameObject Jointplug;
 
+    
+
     void Start()
     {
         spawnpoint = startposition.position;
