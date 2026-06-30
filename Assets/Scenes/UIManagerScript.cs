@@ -257,20 +257,20 @@ public class UIManagerScript : MonoBehaviour
         KeyCard.SetActive(false);
     }
 
-    public void OnRespawnButton()
+    public void OnRespawnButton() //for when respawn button is pressed, load Saved progress if any by changing the UI and item's setactive
     {
         print("save loaded");
-        checkPoint.LoadProgress();
-        StartPanel.SetActive(false);
+        checkPoint.LoadProgress(); //load Saved progress
+        StartPanel.SetActive(false);//hide startpanel
         // Close game over menu
-        MenuPanel.SetActive(false);
+        MenuPanel.SetActive(false);//hide Menu Panel
         // Show gameplay UI again
-        MainUI.SetActive(true);
+        MainUI.SetActive(true);//show main UI
         // Hide respawn button
-        RespawnButton.gameObject.SetActive(false);
+        RespawnButton.gameObject.SetActive(false);//hide Respawn button
         // Reset game over state
-        isGameOver = false;
-        GameOver.text = "Game";
+        isGameOver = false; //reset player death state
+        GameOver.text = "Game"; //Game Main title
         // Resume game
         Time.timeScale = 1f;
         Cursor.visible = false;
@@ -279,41 +279,41 @@ public class UIManagerScript : MonoBehaviour
     public void OnStartButton2()
     {
         print("Start Button 2 Clicked");
-        StartButton.gameObject.SetActive(true);
-        StartPanel.SetActive(false);
-        MainUI.SetActive(true);
+        StartButton.gameObject.SetActive(true);//unhide start button
+        StartPanel.SetActive(false);//hide start panel
+        MainUI.SetActive(true);//show main UI
         TogglePanel(); //opens panel
-        AlertPanel.SetActive(false);
+        AlertPanel.SetActive(false); //Hide Alert Panel
     }
     public void OnOptionsClick()
     {
-        OptionsPage.SetActive(true);
-        StartPanel.SetActive(false);
+        OptionsPage.SetActive(true); //hide Options Page
+        StartPanel.SetActive(false); //Hide start panel
         Time.timeScale = 0f;  // Pause everything
     }
     public void OnCreditClick()
     {
-        CreditPage.SetActive(true);
-        StartPanel.SetActive(false);
+        CreditPage.SetActive(true); // show credits page
+        StartPanel.SetActive(false); // hide start panel
         Time.timeScale = 0f;  // Pause everything
     }
     public void OnHowToPlayClick()
     {
-        HowToPlayPage.SetActive(true);
-        StartPanel.SetActive(false);
+        HowToPlayPage.SetActive(true); //show how to play page
+        StartPanel.SetActive(false); //hide start panel
         Time.timeScale = 0f;  // Pause everything
     }
     public void OnBackToStartPanel()
     {
-        StartPanel.SetActive(true);
-        HowToPlayPage.SetActive(false);
-        CreditPage.SetActive(false);
-        OptionsPage.SetActive(false);
-        MenuPanel.SetActive(false);
+        StartPanel.SetActive(true); //show start panel
+        HowToPlayPage.SetActive(false); //hide how to play page
+        CreditPage.SetActive(false); //hide credit page
+        OptionsPage.SetActive(false);// options page
+        MenuPanel.SetActive(false);//hide menu panel
     }
     public void OnQuit()
     {
         print("Quit");
-        Application.Quit();
+        Application.Quit(); //quit
     }
 }

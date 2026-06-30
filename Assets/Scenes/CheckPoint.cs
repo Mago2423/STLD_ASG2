@@ -125,6 +125,7 @@ public class CheckPoint : MonoBehaviour
 
     public void LoadProgress()
     {
+        //for player controller and rigit body to not interfere with the collision for trigger somehow and to make respawn word with no transfered momentem
         CharacterController cc =
         collisionDetector.GetComponent<CharacterController>();
 
