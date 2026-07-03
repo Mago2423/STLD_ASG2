@@ -15,6 +15,7 @@ TagManager:
   - Unlocked
   - Generator
   - Power
+  - coinSpawn
   layers:
   - Default
   - TransparentFX

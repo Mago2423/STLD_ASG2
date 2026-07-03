@@ -45,6 +45,9 @@ public class CollisionDetector : MonoBehaviour
     public bool HavePower = false;
 
     GameObject currentCollider;
+    public GameObject objectToSpawn;
+    public GameObject explosion;
+    bool touched = false;
     
     public UIManagerScript UIManagerScript;
     void OnMenu()
@@ -70,9 +73,9 @@ public class CollisionDetector : MonoBehaviour
             return;
         }
         print("Interacted"); // check in console
-        var Collectible = currentCollider.GetComponent<Collectible>();
-        var collider = currentCollider.GetComponent<Collider>();
-        var Door = currentCollider.GetComponent<Door>();
+        var Collectible = currentCollider.GetComponent<Collectible>();//checks for the collectible script on the object
+        var collider = currentCollider.GetComponent<Collider>();//checks for the collider on the object
+        var Door = currentCollider.GetComponent<Door>();//checks for the door script on the object
         if (Door != null)
         {
             if (currentCollider.CompareTag("Locked")) //checks for "locked" Tag
@@ -190,6 +193,17 @@ public class CollisionDetector : MonoBehaviour
                     UIManagerScript.CoinsCollected(coinsCollected); //update coinscollected in the UI
                 }
             
+            }
+        }
+        else if (currentCollider != null)
+        {
+            if (currentCollider.CompareTag("CoinSpawn") && !touched)
+            {
+                var spawnedObject = Instantiate(objectToSpawn,currentCollider.transform.position + new Vector3(0,1,0), currentCollider.transform.rotation);
+                var explosionObject = Instantiate(explosion,currentCollider.transform.position + new Vector3(0,1,0), currentCollider.transform.rotation, spawnedObject.transform);
+                touched = true;
+                Destroy(currentCollider.gameObject,1);
+                Destroy(explosionObject,2);
             }
         }
     }

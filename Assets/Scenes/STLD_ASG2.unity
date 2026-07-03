@@ -2762,7 +2762,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &202674869
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3171,7 +3171,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &239206286
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3209,7 +3209,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -14075,83 +14075,6 @@ MonoBehaviour:
   CreditPage: {fileID: 834103301}
   HowToPlayPage: {fileID: 169929512}
   elapsedTime: 0
---- !u!1001 &876342954
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 2028109942544830685, guid: ad5f3ad0db07a2c42a01d938039e39e1, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 2028109942544830685, guid: ad5f3ad0db07a2c42a01d938039e39e1, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2028109942544830685, guid: ad5f3ad0db07a2c42a01d938039e39e1, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 2028109942544830685, guid: ad5f3ad0db07a2c42a01d938039e39e1, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 489
-      objectReference: {fileID: 0}
-    - target: {fileID: 2028109942544830685, guid: ad5f3ad0db07a2c42a01d938039e39e1, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.1999998
-      objectReference: {fileID: 0}
-    - target: {fileID: 2028109942544830685, guid: ad5f3ad0db07a2c42a01d938039e39e1, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 301
-      objectReference: {fileID: 0}
-    - target: {fileID: 2028109942544830685, guid: ad5f3ad0db07a2c42a01d938039e39e1, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2028109942544830685, guid: ad5f3ad0db07a2c42a01d938039e39e1, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2028109942544830685, guid: ad5f3ad0db07a2c42a01d938039e39e1, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2028109942544830685, guid: ad5f3ad0db07a2c42a01d938039e39e1, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2028109942544830685, guid: ad5f3ad0db07a2c42a01d938039e39e1, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2028109942544830685, guid: ad5f3ad0db07a2c42a01d938039e39e1, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2028109942544830685, guid: ad5f3ad0db07a2c42a01d938039e39e1, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4941295939452664634, guid: ad5f3ad0db07a2c42a01d938039e39e1, type: 3}
-      propertyPath: damageAmount
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 4941295939452664634, guid: ad5f3ad0db07a2c42a01d938039e39e1, type: 3}
-      propertyPath: UIManagerScript
-      value: 
-      objectReference: {fileID: 870401405}
-    - target: {fileID: 8803155766708442237, guid: ad5f3ad0db07a2c42a01d938039e39e1, type: 3}
-      propertyPath: m_Name
-      value: Instakill
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: ad5f3ad0db07a2c42a01d938039e39e1, type: 3}
 --- !u!43 &931457828
 Mesh:
   m_ObjectHideFlags: 0
@@ -16299,7 +16222,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -28144,6 +28067,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Coin (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 6372627080958363772, guid: 8ce9883eacea2194aa6562ee120bc48b, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7888955399211972398, guid: 8ce9883eacea2194aa6562ee120bc48b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 392.42
@@ -36715,7 +36642,6 @@ SceneRoots:
   - {fileID: 591338046}
   - {fileID: 870401403}
   - {fileID: 20432595}
-  - {fileID: 876342954}
   - {fileID: 2111819823}
   - {fileID: 326326852}
   - {fileID: 1898627902}
