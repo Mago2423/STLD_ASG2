@@ -113,6 +113,16 @@ public class CollisionDetector : MonoBehaviour
                 return;
             }
         }
+
+        else if (currentCollider.CompareTag("coinSpawn") && !touched)
+        {
+            var spawnedObject = Instantiate(objectToSpawn,currentCollider.transform.position + new Vector3(0,1,0), currentCollider.transform.rotation);
+            var explosionObject = Instantiate(explosion,currentCollider.transform.position + new Vector3(0,1,0), currentCollider.transform.rotation, spawnedObject.transform);
+            touched = true;
+            Destroy(currentCollider.gameObject,1);
+            Destroy(explosionObject,2);
+        }
+
         else if (currentCollider.CompareTag("Generator")) //checks for "generator" Tag
             {
                 if (HaveJointPlug == true) // if Have key card the door is unlocked
@@ -128,7 +138,7 @@ public class CollisionDetector : MonoBehaviour
                     return; // Exit the method to prevent interaction with the door
                 }
             }
-        else if (currentCollider != null && currentCollider.CompareTag("Item")) //checks for the tag "item"
+        else if (currentCollider.CompareTag("Item")) //checks for the tag "item"
         {
             if (Collectible != null)
             {
@@ -193,17 +203,6 @@ public class CollisionDetector : MonoBehaviour
                     UIManagerScript.CoinsCollected(coinsCollected); //update coinscollected in the UI
                 }
             
-            }
-        }
-        else if (currentCollider != null)
-        {
-            if (currentCollider.CompareTag("CoinSpawn") && !touched)
-            {
-                var spawnedObject = Instantiate(objectToSpawn,currentCollider.transform.position + new Vector3(0,1,0), currentCollider.transform.rotation);
-                var explosionObject = Instantiate(explosion,currentCollider.transform.position + new Vector3(0,1,0), currentCollider.transform.rotation, spawnedObject.transform);
-                touched = true;
-                Destroy(currentCollider.gameObject,1);
-                Destroy(explosionObject,2);
             }
         }
     }
