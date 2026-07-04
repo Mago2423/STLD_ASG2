@@ -43,18 +43,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Interact",
+                    "name": "Menu",
                     "type": "Button",
-                    "id": "adef7ef0-2516-4116-ba76-fd26d9a6bf1e",
+                    "id": "fd50de00-ed73-4b50-9fc2-f229c337e89e",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Menu",
+                    "name": "Interact",
                     "type": "Button",
-                    "id": "df9dbd24-1b07-4730-98f7-c59590e902ce",
+                    "id": "4fcaf0c8-b4d3-4295-88cf-3d36e2c7798d",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -63,7 +63,7 @@
                 {
                     "name": "Heal",
                     "type": "Button",
-                    "id": "0970a498-71c3-4910-92a7-23234cc0cdf3",
+                    "id": "150d856c-01f8-42e7-9534-d2528e1cd358",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -249,29 +249,7 @@
                 },
                 {
                     "name": "",
-                    "id": "5b2b7849-983a-453a-8c76-77885c41bfda",
-                    "path": "<Keyboard>/e",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Interact",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "ef60e404-c67c-4b18-9af6-b9a510e894a2",
-                    "path": "<Gamepad>/buttonEast",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Interact",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "472339ca-e1a8-42b5-a43a-3b3bc154cfe3",
+                    "id": "610bebf5-a773-4ab8-8132-a7fc03070faf",
                     "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
@@ -282,7 +260,18 @@
                 },
                 {
                     "name": "",
-                    "id": "bb93ffd5-030b-4576-aa5d-6966258193de",
+                    "id": "feb9fd66-4084-42a6-8e27-2e32c12b95b0",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "98d3b7d6-88b2-4c6c-a940-b495c9f3f56d",
                     "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",

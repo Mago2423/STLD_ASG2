@@ -44,34 +44,115 @@ public class CollisionDetector : MonoBehaviour
     /// </summary>
     public bool HavePower = false;
 
-    GameObject currentCollider;
+    public float interactDistance = 6f;
+    //public LayerMask interactLayer;
+
     public GameObject objectToSpawn;
     public GameObject explosion;
     bool touched = false;
+    [Header("Debug")]
+    public bool debugUseKey = true; // allow testing interact with keyboard E
+    [Header("References")]
+    public Camera cameraToUse; // assign in inspector to ensure correct camera is used
+    public RectTransform crosshair; // optional UI crosshair position for raycast origin
     
     public UIManagerScript UIManagerScript;
-    void OnMenu()
+    public void OnMenu(InputValue value)
     {
         UIManagerScript.TogglePanel(); //toggle panel - pause screen
     }
-    void OnCollisionEnter(Collision collision)
+    // Support PlayerInput Send Messages (parameterless) behavior
+    public void OnMenu()
     {
-        currentCollider = collision.gameObject;
-        print($"Collided with {currentCollider.name}"); // check in console
+        UIManagerScript.TogglePanel();
+    }
+    public void OnInteract(InputValue value)
+    {
+        HandleInteract();
     }
 
-    void OnCollisionExit(Collision collision)
+    // Support PlayerInput Send Messages (parameterless) behavior
+    public void OnInteract()
     {
-        print($"Stopped colliding with {currentCollider.name}"); // check in console
-        currentCollider = null;
+        HandleInteract();
     }
 
-    void OnInteract(InputValue value) // code for interace - E
+    private void HandleInteract()
     {
-        if (currentCollider == null)
+        Debug.Log("HandleInteract: starting diagnostics");
+        if (cameraToUse == null && Camera.main == null)
         {
+            Debug.Log("HandleInteract: No camera available (cameraToUse and Camera.main are null)");
             return;
         }
+
+        // prefer inspector cameraToUse if assigned
+        var cam = cameraToUse != null ? cameraToUse : Camera.main;
+        Ray ray;
+        if (crosshair != null)
+        {
+            Vector3 screenPoint = RectTransformUtility.WorldToScreenPoint(cam, crosshair.position);
+            ray = cam.ScreenPointToRay(screenPoint);
+            Debug.Log($"Using crosshair-based ray. ScreenPoint: {screenPoint}, origin: {ray.origin}, dir: {ray.direction}, maxDist: {interactDistance}");
+            Debug.DrawRay(ray.origin, ray.direction * interactDistance, Color.red, 2f);
+        }
+        else
+        {
+            Vector3 origin = cam.transform.position + cam.transform.forward * cam.nearClipPlane;
+            ray = new Ray(origin, cam.transform.forward);
+            Debug.Log($"Using forward ray. Origin: {origin}, dir: {cam.transform.forward}, maxDist: {interactDistance}");
+            Debug.DrawRay(origin, cam.transform.forward * interactDistance, Color.red, 2f);
+        }
+
+        // Gather all hits (including triggers) and pick the nearest non-player, non-self hit
+        var allHits = Physics.RaycastAll(ray, interactDistance, ~0, QueryTriggerInteraction.Collide);
+        Debug.Log($"RaycastAll hits count: {allHits.Length}");
+
+        if (allHits.Length == 0)
+        {
+            Debug.Log("No RaycastAll hits");
+            return;
+        }
+
+        System.Array.Sort(allHits, (a, b) => a.distance.CompareTo(b.distance));
+
+        RaycastHit? chosen = null;
+        foreach (var h in allHits)
+        {
+            if (h.collider == null) continue;
+            Debug.Log($"  RaycastAll hit: {h.collider.name}, tag={h.collider.tag}, isTrigger={h.collider.isTrigger}, distance={h.distance}");
+
+            // Skip hits that are part of this player (self or children)
+            if (h.collider.transform.IsChildOf(this.transform) || h.collider.gameObject == this.gameObject)
+            {
+                Debug.Log($"  Skipping hit on self: {h.collider.name}");
+                continue;
+            }
+
+            // Skip objects explicitly tagged as Player
+            if (h.collider.CompareTag("Player"))
+            {
+                Debug.Log($"  Skipping hit by tag Player: {h.collider.name}");
+                continue;
+            }
+
+            chosen = h;
+            break;
+        }
+
+        if (!chosen.HasValue)
+        {
+            Debug.Log("No valid hits after filtering player/self");
+            return;
+        }
+
+        RaycastHit hit = chosen.Value;
+        Debug.Log($"Hit: {hit.collider.name}, Tag: {hit.collider.tag}, isTrigger={hit.collider.isTrigger}");
+
+        GameObject currentCollider = hit.collider.gameObject;
+
+        Debug.Log($"Looking at {currentCollider.name}");
+
         print("Interacted"); // check in console
         var Collectible = currentCollider.GetComponent<Collectible>();//checks for the collectible script on the object
         var collider = currentCollider.GetComponent<Collider>();//checks for the collider on the object
@@ -119,7 +200,7 @@ public class CollisionDetector : MonoBehaviour
             var spawnedObject = Instantiate(objectToSpawn,currentCollider.transform.position + new Vector3(0,1,0), currentCollider.transform.rotation);
             var explosionObject = Instantiate(explosion,currentCollider.transform.position + new Vector3(0,1,0), currentCollider.transform.rotation, spawnedObject.transform);
             touched = true;
-            Destroy(currentCollider.gameObject,1);
+            Destroy(currentCollider.gameObject);
             Destroy(explosionObject,2);
         }
 
@@ -183,7 +264,7 @@ public class CollisionDetector : MonoBehaviour
             }
         }
 
-        else if (currentCollider != null)
+        else if (currentCollider.CompareTag("Coin")) //checks for coin tag
         {
             print($"Interacted with {currentCollider.name}");
             if (Collectible != null)
@@ -207,7 +288,7 @@ public class CollisionDetector : MonoBehaviour
         }
     }
 
-    void OnHeal(InputValue value) //the input to use the injector - Q
+    public void OnHeal(InputValue value) //the input to use the injector - Q
     {
         if (HaveInjector == true) //check if player has injector on them
         {
@@ -218,6 +299,69 @@ public class CollisionDetector : MonoBehaviour
             UIManagerScript.InjectorUsed(); //Updates UI to remove the injector icon
             HaveInjector = false; //Player no injector anymore
         }
+    }
+    // Support PlayerInput Send Messages (parameterless) behavior
+    public void OnHeal()
+    {
+        if (HaveInjector == true)
+        {
+            print($"Healed for {healAmount} health");
+            health += healAmount;
+            if (health > 100) health = 100;
+            UIManagerScript.UpdateHealth(health);
+            UIManagerScript.InjectorUsed();
+            HaveInjector = false;
+        }
+    }
+    private void Start()
+    {
+        Debug.Log($"CollisionDetector Start on {gameObject.name}, enabled={enabled}");
+        Debug.Log($"MainCamera: {(Camera.main!=null?Camera.main.name:"null")}, interactDistance={interactDistance}");
+        var pi = GetComponent<UnityEngine.InputSystem.PlayerInput>();
+        Debug.Log($"PlayerInput on same GameObject: {(pi!=null?"found":"none")}");
+
+        // If no camera was assigned in inspector, pick the enabled camera with highest depth (likely the gameplay follow camera)
+        if (cameraToUse == null)
+        {
+            Camera[] cams = Camera.allCameras;
+            Camera best = null;
+            float bestDepth = float.MinValue;
+            foreach (var c in cams)
+            {
+                if (!c.enabled || !c.gameObject.activeInHierarchy) continue;
+                if (c.depth > bestDepth)
+                {
+                    best = c;
+                    bestDepth = c.depth;
+                }
+            }
+            if (best != null)
+            {
+                cameraToUse = best;
+                Debug.Log($"Auto-selected cameraToUse: {cameraToUse.name} (depth={cameraToUse.depth})");
+            }
+            else
+            {
+                Debug.Log("No enabled cameras found; cameraToUse remains null and will fall back to Camera.main at interact time.");
+            }
+        }
+    }
+
+    private void Update()
+    {
+#if ENABLE_INPUT_SYSTEM
+        if (debugUseKey && UnityEngine.InputSystem.Keyboard.current != null && UnityEngine.InputSystem.Keyboard.current.eKey.wasPressedThisFrame)
+        {
+            Debug.Log("Debug key E pressed (Input System) - calling HandleInteract()");
+            HandleInteract();
+        }
+#else
+        if (debugUseKey && Input.GetKeyDown(KeyCode.E))
+        {
+            Debug.Log("Debug key E pressed (Legacy Input) - calling HandleInteract()");
+            HandleInteract();
+        }
+#endif
     }
 
 
