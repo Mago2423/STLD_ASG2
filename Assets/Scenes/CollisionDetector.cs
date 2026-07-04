@@ -88,21 +88,29 @@ public class CollisionDetector : MonoBehaviour
 
         // prefer inspector cameraToUse if assigned
         var cam = cameraToUse != null ? cameraToUse : Camera.main;
-        Ray ray;
+        Ray cameraRay;
         if (crosshair != null)
         {
-            Vector3 screenPoint = RectTransformUtility.WorldToScreenPoint(cam, crosshair.position);
-            ray = cam.ScreenPointToRay(screenPoint);
-            Debug.Log($"Using crosshair-based ray. ScreenPoint: {screenPoint}, origin: {ray.origin}, dir: {ray.direction}, maxDist: {interactDistance}");
-            Debug.DrawRay(ray.origin, ray.direction * interactDistance, Color.red, 2f);
+            Canvas crosshairCanvas = crosshair.GetComponentInParent<Canvas>();
+            Camera screenCamera = null;
+            if (crosshairCanvas != null && crosshairCanvas.renderMode != RenderMode.ScreenSpaceOverlay)
+            {
+                screenCamera = crosshairCanvas.worldCamera != null ? crosshairCanvas.worldCamera : cam;
+            }
+            Vector3 crosshairWorldCenter = crosshair.TransformPoint(crosshair.rect.center);
+            Vector3 screenPoint = RectTransformUtility.WorldToScreenPoint(screenCamera, crosshairWorldCenter);
+            cameraRay = cam.ScreenPointToRay(screenPoint);
+            Debug.Log($"Using crosshair screen ray. ScreenPoint: {screenPoint}, origin: {cameraRay.origin}, dir: {cameraRay.direction}");
         }
         else
         {
-            Vector3 origin = cam.transform.position + cam.transform.forward * cam.nearClipPlane;
-            ray = new Ray(origin, cam.transform.forward);
-            Debug.Log($"Using forward ray. Origin: {origin}, dir: {cam.transform.forward}, maxDist: {interactDistance}");
-            Debug.DrawRay(origin, cam.transform.forward * interactDistance, Color.red, 2f);
+            cameraRay = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+            Debug.Log($"Using center viewport ray. Origin: {cameraRay.origin}, dir: {cameraRay.direction}");
         }
+
+        Ray ray = cameraRay;
+        Debug.Log($"Using camera ray. Origin: {ray.origin}, dir: {ray.direction}, maxDist: {interactDistance}");
+        Debug.DrawRay(ray.origin, ray.direction * interactDistance, Color.red, 2f);
 
         // Gather all hits (including triggers) and pick the nearest non-player, non-self hit
         var allHits = Physics.RaycastAll(ray, interactDistance, ~0, QueryTriggerInteraction.Collide);
@@ -150,16 +158,32 @@ public class CollisionDetector : MonoBehaviour
         Debug.Log($"Hit: {hit.collider.name}, Tag: {hit.collider.tag}, isTrigger={hit.collider.isTrigger}");
 
         GameObject currentCollider = hit.collider.gameObject;
+        Transform hitTransform = hit.collider.transform;
 
         Debug.Log($"Looking at {currentCollider.name}");
 
         print("Interacted"); // check in console
-        var Collectible = currentCollider.GetComponent<Collectible>();//checks for the collectible script on the object
-        var collider = currentCollider.GetComponent<Collider>();//checks for the collider on the object
-        var Door = currentCollider.GetComponent<Door>();//checks for the door script on the object
+        var Collectible = hit.collider.GetComponentInParent<Collectible>();//checks for the collectible script on the object or its parents
+        var collider = hit.collider.GetComponent<Collider>();//checks for the collider on the object
+        var Door = hit.collider.GetComponentInParent<Door>();//checks for the door script on the object or its parents
         if (Door != null)
         {
-            if (currentCollider.CompareTag("Locked")) //checks for "locked" Tag
+            Debug.Log($"Door component found on parent object '{Door.gameObject.name}' for hit object '{currentCollider.name}'.");
+        }
+
+        bool HasTagInHierarchy(Transform t, string tag)
+        {
+            while (t != null)
+            {
+                if (t.CompareTag(tag)) return true;
+                t = t.parent;
+            }
+            return false;
+        }
+
+        if (Door != null)
+        {
+            if (HasTagInHierarchy(hitTransform, "Locked")) //checks for "locked" Tag in the hit hierarchy
             {
                 if (HaveKeyCard == true) // if Have key card the door is unlocked
                 {
@@ -173,7 +197,7 @@ public class CollisionDetector : MonoBehaviour
                     return; // Exit the method to prevent interaction with the door
                 }
             }
-            else if (currentCollider.CompareTag("Power")) //checks for "power" Tag
+            else if (HasTagInHierarchy(hitTransform, "Power")) //checks for "power" Tag in the hit hierarchy
             {
                 if (HavePower == true) // if Have generator on the door is unlocked
                 {
@@ -187,7 +211,7 @@ public class CollisionDetector : MonoBehaviour
                     return; // Exit the method to prevent interaction with the door
                 }
             }
-            else if (currentCollider.CompareTag("Unlocked")) //checks for "unlocked" Tag
+            else if (HasTagInHierarchy(hitTransform, "Unlocked")) //checks for "unlocked" Tag in the hit hierarchy
             {
                 print($"Interacted with {currentCollider.name}");
                 Door.Interact(); //open or close the door using animation
@@ -195,7 +219,7 @@ public class CollisionDetector : MonoBehaviour
             }
         }
 
-        else if (currentCollider.CompareTag("coinSpawn") && !touched)
+        else if (HasTagInHierarchy(hitTransform, "coinSpawn") && !touched)
         {
             var spawnedObject = Instantiate(objectToSpawn,currentCollider.transform.position + new Vector3(0,1,0), currentCollider.transform.rotation);
             var explosionObject = Instantiate(explosion,currentCollider.transform.position + new Vector3(0,1,0), currentCollider.transform.rotation, spawnedObject.transform);
@@ -204,7 +228,7 @@ public class CollisionDetector : MonoBehaviour
             Destroy(explosionObject,2);
         }
 
-        else if (currentCollider.CompareTag("Generator")) //checks for "generator" Tag
+        else if (HasTagInHierarchy(hitTransform, "Generator")) //checks for "generator" Tag
             {
                 if (HaveJointPlug == true) // if Have key card the door is unlocked
                 {
@@ -219,7 +243,7 @@ public class CollisionDetector : MonoBehaviour
                     return; // Exit the method to prevent interaction with the door
                 }
             }
-        else if (currentCollider.CompareTag("Item")) //checks for the tag "item"
+        else if (HasTagInHierarchy(hitTransform, "Item")) //checks for the tag "item"
         {
             if (Collectible != null)
             {

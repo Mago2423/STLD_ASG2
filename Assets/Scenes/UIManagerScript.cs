@@ -129,7 +129,7 @@ public class UIManagerScript : MonoBehaviour
 
         print("you need a joint plug");
         AlertText.text = "You Need a joint Plug";
-        ToggleAlert();
+        ShowAlert();
     }
 
     public void GeneratorDoorPanel() //toggle panel, Tell player they need to on the generator
@@ -137,7 +137,7 @@ public class UIManagerScript : MonoBehaviour
 
         print("you need to on the Generator");
         AlertText.text = "You Need to On the Generator";
-        ToggleAlert();
+        ShowAlert();
     }
 
     public void CoinsCollected(int coinsCollected) //toggle panel, congradulates player when collected coins reach 10 or more
@@ -147,7 +147,7 @@ public class UIManagerScript : MonoBehaviour
         {
             print("You have collected all the coins!");
             AlertText.text = "You have collected all the coins!";
-            ToggleAlert();
+            ShowAlert();
         }
     }
 
@@ -178,23 +178,48 @@ public class UIManagerScript : MonoBehaviour
         Cursor.lockState = MenuPanel.activeSelf ? CursorLockMode.None : CursorLockMode.Locked;
     }
 
-    public void ToggleAlert() //set Alert panel and start button visible, lock cursor and pause
+    public void ToggleAlert() //toggle Alert panel visibility, lock cursor and pause
     {
-        AlertPanel.SetActive(!AlertPanel.activeSelf);
+        bool willShow = !AlertPanel.activeSelf;
+        AlertPanel.SetActive(willShow);
         print($"AlertPanel is now: {AlertPanel.activeSelf}");
         StartButton.gameObject.SetActive(true);
-        // Pause/unpause the game
-        if (AlertPanel.activeSelf)
+        if (willShow)
         {
+            MenuPanel.SetActive(false);
+            MainUI.SetActive(false);
             Time.timeScale = 0f;  // Pause everything
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
         }
         else
         {
             Time.timeScale = 1f;  // Resume normal speed
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+            MainUI.SetActive(true);
         }
-        
-        Cursor.visible = AlertPanel.activeSelf;
-        Cursor.lockState = AlertPanel.activeSelf ? CursorLockMode.None : CursorLockMode.Locked;
+    }
+
+    public void ShowAlert()
+    {
+        MenuPanel.SetActive(false);
+        MainUI.SetActive(false);
+        AlertPanel.SetActive(true);
+        print($"AlertPanel is now: {AlertPanel.activeSelf}");
+        StartButton.gameObject.SetActive(true);
+        Time.timeScale = 0f;
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+    }
+
+    public void HideAlert()
+    {
+        AlertPanel.SetActive(false);
+        print($"AlertPanel is now: {AlertPanel.activeSelf}");
+        Time.timeScale = 1f;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     public void Gameover() //toggle game over screen
@@ -223,7 +248,7 @@ public class UIManagerScript : MonoBehaviour
         print("Start Button Clicked");
         StartText.text = "Resume"; //change "start" to "resume"
         TogglePanel(); //closes panel
-        AlertPanel.SetActive(false);
+        HideAlert();
     }
     public void InjectorCollected() //make Icon for injector visible
     {
@@ -283,7 +308,7 @@ public class UIManagerScript : MonoBehaviour
         StartPanel.SetActive(false);//hide start panel
         MainUI.SetActive(true);//show main UI
         TogglePanel(); //opens panel
-        AlertPanel.SetActive(false); //Hide Alert Panel
+        HideAlert(); //Hide Alert Panel
     }
     public void OnOptionsClick()
     {
@@ -315,5 +340,9 @@ public class UIManagerScript : MonoBehaviour
     {
         print("Quit");
         Application.Quit(); //quit
+    }
+    public void OnClose()
+    {
+        HideAlert(); //hide alert panel
     }
 }
