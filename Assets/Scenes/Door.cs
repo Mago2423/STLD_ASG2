@@ -24,13 +24,22 @@ public class Door : MonoBehaviour
             }
         }
     }
-    public int Interact() //playes animation on interact
+    public int Interact()
     {
+        Debug.Log($"Before toggle: isOpen = {isOpen}");
+
         var animator = GetComponent<Animator>();
-        var audio = GetComponent<AudioSource>(); //play audio
-        audio.Play();
+        var audio = GetComponent<AudioSource>();
+
+        if (audio != null)
+            audio.Play();
+
         isOpen = !isOpen;
+
+        Debug.Log($"After toggle: isOpen = {isOpen}");
+
         animator.SetBool("IsOpen", isOpen);
+
         return 0;
     }
 

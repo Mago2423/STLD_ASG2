@@ -371,22 +371,5 @@ public class CollisionDetector : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-#if ENABLE_INPUT_SYSTEM
-        if (debugUseKey && UnityEngine.InputSystem.Keyboard.current != null && UnityEngine.InputSystem.Keyboard.current.eKey.wasPressedThisFrame)
-        {
-            Debug.Log("Debug key E pressed (Input System) - calling HandleInteract()");
-            HandleInteract();
-        }
-#else
-        if (debugUseKey && Input.GetKeyDown(KeyCode.E))
-        {
-            Debug.Log("Debug key E pressed (Legacy Input) - calling HandleInteract()");
-            HandleInteract();
-        }
-#endif
-    }
-
 
 }
