@@ -21,6 +21,7 @@ public class UIManagerScript : MonoBehaviour
     public TMP_Text StartText;
     public TMP_Text TimerText;
     public TMP_Text AlertText;
+
     public GameObject Injector;
     public GameObject KeyCard;
     public GameObject JointPlug;
@@ -33,6 +34,9 @@ public class UIManagerScript : MonoBehaviour
     public GameObject HowToPlayPage;
     public GameObject Crosshair;
     public GameObject Items;
+    public GameObject SpaceSuit;
+    public GameObject MiniJet;
+    public GameObject ToolBox;
     private bool isGameOver = false;
     bool menuOpen = false;
     
@@ -66,6 +70,9 @@ public class UIManagerScript : MonoBehaviour
         HowToPlayPage.SetActive(false);
         Crosshair.SetActive(false);
         Items.SetActive(false);
+        SpaceSuit.SetActive(false);
+        MiniJet.SetActive(false);
+        ToolBox.SetActive(false);
 
         // evaluate the actual menu state after activating StartPanel
         menuOpen = MenuPanel.activeSelf || StartPanel.activeSelf;
@@ -234,6 +241,7 @@ public class UIManagerScript : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
     }
 
+
     public void Gameover() //toggle game over screen
     {
         RespawnButton.gameObject.SetActive(true);
@@ -292,6 +300,37 @@ public class UIManagerScript : MonoBehaviour
     {
         print("Key Card Used");
         KeyCard.SetActive(false);
+    }
+
+    public void SpaceSuitUsed() //make icon for space suit not visible
+    {
+        print("Space Suit Used");
+        SpaceSuit.SetActive(false);
+    }
+    public void MiniJetUsed() //make icon for mini jet not visible
+    {
+        print("Mini Jet Used");
+        MiniJet.SetActive(false);
+    }
+    public void ToolBoxUsed() //make icon for tool box not visible
+    {
+        print("Tool Box Used");
+        ToolBox.SetActive(false);
+    }
+    public void SpaceSuitCollected() //make icon for space suit visible
+    {
+        print("Space Suit Obtained");
+        SpaceSuit.SetActive(true);
+    }
+    public void MiniJetCollected() //make icon for mini jet visible
+    {
+        print("Mini Jet Obtained");
+        MiniJet.SetActive(true);
+    }
+    public void ToolBoxCollected() //make icon for tool box visible
+    {
+        print("Tool Box Obtained");
+        ToolBox.SetActive(true);
     }
 
     public void OnRespawnButton() //for when respawn button is pressed, load Saved progress if any by changing the UI and item's setactive

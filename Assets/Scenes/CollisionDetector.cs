@@ -43,6 +43,9 @@ public class CollisionDetector : MonoBehaviour
     /// checks for whether the power is on
     /// </summary>
     public bool HavePower = false;
+    public bool HaveSpaceSuit = false;
+    public bool HaveMiniJet = false;
+    public bool HaveToolBox = false;
 
     public float interactDistance = 6f;
     //public LayerMask interactLayer;
@@ -268,7 +271,7 @@ public class CollisionDetector : MonoBehaviour
                 }
             }
         }
-        else if (currentCollider.CompareTag("Injector")) //checks for injector tag - healing item
+        else if (HasTagInHierarchy(hitTransform, "Injector")) //checks for injector tag - healing item
         {
             HaveInjector = true; // player has injector
             UIManagerScript.InjectorCollected();
@@ -277,7 +280,7 @@ public class CollisionDetector : MonoBehaviour
                 Collectible.Collect(); //play audio and animation
             }
         }
-        else if (currentCollider.CompareTag("KeyCard")) //checks for keycard tag
+        else if (HasTagInHierarchy(hitTransform, "KeyCard")) //checks for keycard tag
         {
             HaveKeyCard = true;
             UIManagerScript.KeyCardCollected();
@@ -286,13 +289,55 @@ public class CollisionDetector : MonoBehaviour
                 Collectible.Collect(); //play audio and animation
             }
         }
-        else if (currentCollider.CompareTag("JointPlug")) //checks for jointPlug tag
+        else if (HasTagInHierarchy(hitTransform, "JointPlug")) //checks for jointPlug tag
         {
             HaveJointPlug = true;
             UIManagerScript.JointPlugCollected();
             if (Collectible != null)
             {
                 Collectible.Collect(); //play audio and animation
+            }
+        }
+
+        else if (HasTagInHierarchy(hitTransform, "SpaceSuit")) //checks for space suit tag
+        {
+            HaveSpaceSuit = true;
+            UIManagerScript.SpaceSuitCollected();
+            if (Collectible != null)
+            {
+                Collectible.Collect(); //play audio and animation
+            }
+        }
+        else if (HasTagInHierarchy(hitTransform, "MiniJet")) //checks for mini jet tag
+        {
+            HaveMiniJet = true;
+            UIManagerScript.MiniJetCollected();
+            if (Collectible != null)
+            {
+                Collectible.Collect(); //play audio and animation
+            }
+        }
+        else if (HasTagInHierarchy(hitTransform, "ToolBox")) //checks for tool box tag
+        {
+            HaveToolBox = true;
+            UIManagerScript.ToolBoxCollected();
+            if (Collectible != null)
+            {
+                Collectible.Collect(); //play audio and animation
+            }
+        }
+
+        else if (HasTagInHierarchy(hitTransform, "Ship")) //checks for Ship tag
+        {
+            if(HaveToolBox && HaveSpaceSuit && HaveMiniJet) // if player has all 3 items, they can escape
+            {
+                UIManagerScript.AlertText.text = "Congratulations! You have fixed the ship and escaped!";
+                UIManagerScript.ToggleAlert();
+            }
+            else
+            {
+                UIManagerScript.AlertText.text = "Find all required items to fix the ship and escape!";
+                UIManagerScript.ToggleAlert();
             }
         }
 

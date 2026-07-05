@@ -42,7 +42,11 @@ public class CheckPoint : MonoBehaviour
     /// checks for whether the power is on
     /// </summary>
     public bool saveHavePower = false;
+    public bool saveHaveSpaceSuit = false;
+    public bool saveHaveMiniJet = false;
+    public bool saveHaveToolBox = false;
     public float savelapsedTime = 0f; //time spent while the game is running
+
 
 
 
@@ -57,6 +61,9 @@ public class CheckPoint : MonoBehaviour
     public GameObject Injector;
     public GameObject Keycard;
     public GameObject Jointplug;
+    public GameObject SpaceSuit;
+    public GameObject MiniJet;
+    public GameObject ToolBox;
     public GameObject spawnInjector;
     public GameObject spawnKeycard;
     public GameObject spawnJointplug;
@@ -65,7 +72,10 @@ public class CheckPoint : MonoBehaviour
 
     void Start()
     {
-        spawnpoint = startposition.position;
+        if (startposition != null)
+        {
+            spawnpoint = startposition.position;
+        }
     }
 
     void OnTriggerEnter(Collider collision)
@@ -84,8 +94,8 @@ public class CheckPoint : MonoBehaviour
         Debug.Log("=== SAVING ===");
         Debug.Log("Score: " + collisionDetector.score);
         Debug.Log("Health: " + collisionDetector.health);
-        Debug.Log("Items: " + collisionDetector.itemsCollected);
-        Debug.Log("Coins: " + collisionDetector.coinsCollected);
+        //Debug.Log("Items: " + collisionDetector.itemsCollected);
+        //Debug.Log("Coins: " + collisionDetector.coinsCollected);
         savescore = collisionDetector.score;
         /// <summary>
         /// Player Health
@@ -94,11 +104,11 @@ public class CheckPoint : MonoBehaviour
         /// <summary>
         /// keeps track of items collected
         /// </summary>
-        saveitemsCollected = collisionDetector.itemsCollected;
+        //saveitemsCollected = collisionDetector.itemsCollected;
         /// <summary>
         ///  keeps track of coins collected
         /// </summary>
-        savecoinsCollected = collisionDetector.coinsCollected; 
+        //savecoinsCollected = collisionDetector.coinsCollected; 
         /// <summary>
         ///  the amount healed from using the injector
         /// </summary>
@@ -119,12 +129,21 @@ public class CheckPoint : MonoBehaviour
         /// checks for whether the power is on
         /// </summary>
         saveHavePower = collisionDetector.HavePower;
+        saveHaveSpaceSuit = collisionDetector.HaveSpaceSuit;
+        saveHaveMiniJet = collisionDetector.HaveMiniJet;
+        saveHaveToolBox = collisionDetector.HaveToolBox;
         savelapsedTime = UIManagerScript.elapsedTime; //time spent while the game is running
 
     }
 
     public void LoadProgress()
     {
+        if (collisionDetector == null)
+        {
+            Debug.LogError("CollisionDetector reference is missing on CheckPoint.");
+            return;
+        }
+
         //for player controller and rigit body to not interfere with the collision for trigger somehow and to make respawn word with no transfered momentem
         CharacterController cc =
         collisionDetector.GetComponent<CharacterController>();
@@ -154,13 +173,16 @@ public class CheckPoint : MonoBehaviour
         // Restore player values
         collisionDetector.score = savescore;
         collisionDetector.health = savehealth;
-        collisionDetector.itemsCollected = saveitemsCollected;
-        collisionDetector.coinsCollected = savecoinsCollected;
+        //collisionDetector.itemsCollected = saveitemsCollected;
+        //collisionDetector.coinsCollected = savecoinsCollected;
         collisionDetector.healAmount = savehealAmount;
         collisionDetector.HaveInjector = saveHaveInjector;
         collisionDetector.HaveKeyCard = saveHaveKeyCard;
         collisionDetector.HaveJointPlug = saveHaveJointPlug;
         collisionDetector.HavePower = saveHavePower;
+        collisionDetector.HaveSpaceSuit = saveHaveSpaceSuit;
+        collisionDetector.HaveMiniJet = saveHaveMiniJet;
+        collisionDetector.HaveToolBox = saveHaveToolBox;
 
         // Restore timer
         UIManagerScript.elapsedTime = savelapsedTime;
@@ -168,8 +190,8 @@ public class CheckPoint : MonoBehaviour
         // Update UI
         UIManagerScript.UpdateScore(savescore);
         UIManagerScript.UpdateHealth(savehealth);
-        UIManagerScript.ItemCollected(saveitemsCollected);
-        UIManagerScript.CoinsCollected(savecoinsCollected);
+        //UIManagerScript.ItemCollected(saveitemsCollected);
+        //UIManagerScript.CoinsCollected(savecoinsCollected);
 
         // Restore icons and objects
         if (saveHaveInjector)
@@ -196,11 +218,36 @@ public class CheckPoint : MonoBehaviour
             UIManagerScript.JointPlugUsed();
             Jointplug.GetComponent<Collectible>().Respawn();
         }
+
+        if (saveHaveSpaceSuit)
+            UIManagerScript.SpaceSuitCollected();
+        else
+        {
+            UIManagerScript.SpaceSuitUsed();
+            SpaceSuit.GetComponent<Collectible>().Respawn();
+        }
+
+        if (saveHaveMiniJet)
+            UIManagerScript.MiniJetCollected();
+        else
+        {
+            UIManagerScript.MiniJetUsed();
+            MiniJet.GetComponent<Collectible>().Respawn();
+        }
+
+        if (saveHaveToolBox)
+            UIManagerScript.ToolBoxCollected();
+        else
+        {
+            UIManagerScript.ToolBoxUsed();
+            ToolBox.GetComponent<Collectible>().Respawn();
+        }
+        
         //check for load in consol
         Debug.Log($"Saved Score: {savescore}");
         Debug.Log($"Saved Health: {savehealth}");
-        Debug.Log($"Saved Items: {saveitemsCollected}");
-        Debug.Log($"Saved Coins: {savecoinsCollected}");
+        //Debug.Log($"Saved Items: {saveitemsCollected}");
+        //Debug.Log($"Saved Coins: {savecoinsCollected}");
     }
 
     
