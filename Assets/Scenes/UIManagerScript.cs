@@ -31,15 +31,17 @@ public class UIManagerScript : MonoBehaviour
     public GameObject OptionsPage;
     public GameObject CreditPage;
     public GameObject HowToPlayPage;
+    public GameObject Crosshair;
+    public GameObject Items;
     private bool isGameOver = false;
     bool menuOpen = false;
+    
     
 
         public float elapsedTime = 0f; //time spent while the game is running
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        menuOpen = MenuPanel.activeSelf || StartPanel.activeSelf;
         //setting all the UI value to thier devualt value and text
         ScoreText.text = "Score: 0";
         HealthText.text = "Health: 100";
@@ -62,8 +64,13 @@ public class UIManagerScript : MonoBehaviour
         OptionsPage.SetActive(false);
         CreditPage.SetActive(false);
         HowToPlayPage.SetActive(false);
+        Crosshair.SetActive(false);
+        Items.SetActive(false);
 
-        //when menuepanel is visible, the cursor is visible and if menupanel is not visible, the cursor is locked
+        // evaluate the actual menu state after activating StartPanel
+        menuOpen = MenuPanel.activeSelf || StartPanel.activeSelf;
+
+        // when a menu panel is visible, show the cursor and pause the game
         if (menuOpen)
         {
             Time.timeScale = 0f;  // Pause everything
@@ -72,7 +79,6 @@ public class UIManagerScript : MonoBehaviour
         {
             Time.timeScale = 1f;  // Resume normal speed
         }
-        
 
         Cursor.visible = menuOpen;
         Cursor.lockState = menuOpen ? CursorLockMode.None : CursorLockMode.Locked;
@@ -159,6 +165,9 @@ public class UIManagerScript : MonoBehaviour
         MainUI.SetActive(!MainUI.activeSelf);
         print($"MainUI is now: {MainUI.activeSelf}");
 
+        Crosshair.SetActive(!MenuPanel.activeSelf);
+        Items.SetActive(!MenuPanel.activeSelf);
+        
         RespawnButton.gameObject.SetActive(false);
         GameOver.text = "Game";
         StartButton.gameObject.SetActive(true);
@@ -206,6 +215,8 @@ public class UIManagerScript : MonoBehaviour
         MenuPanel.SetActive(false);
         MainUI.SetActive(false);
         AlertPanel.SetActive(true);
+        Crosshair.SetActive(false);
+        Items.SetActive(!AlertPanel.activeSelf);
         print($"AlertPanel is now: {AlertPanel.activeSelf}");
         StartButton.gameObject.SetActive(true);
         Time.timeScale = 0f;
@@ -217,6 +228,7 @@ public class UIManagerScript : MonoBehaviour
     {
         AlertPanel.SetActive(false);
         print($"AlertPanel is now: {AlertPanel.activeSelf}");
+        Crosshair.SetActive(true);
         Time.timeScale = 1f;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -308,7 +320,16 @@ public class UIManagerScript : MonoBehaviour
         StartPanel.SetActive(false);//hide start panel
         MainUI.SetActive(true);//show main UI
         TogglePanel(); //opens panel
-        HideAlert(); //Hide Alert Panel
+        // Only hide alert (and change cursor) if the alert panel is actually shown
+        if (AlertPanel.activeSelf)
+        {
+            HideAlert(); //Hide Alert Panel
+        }
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+
+        Debug.Log($"Cursor Visible: {Cursor.visible}");
+        Debug.Log($"Cursor Lock State: {Cursor.lockState}");
     }
     public void OnOptionsClick()
     {

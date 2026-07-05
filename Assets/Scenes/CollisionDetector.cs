@@ -64,7 +64,15 @@ public class CollisionDetector : MonoBehaviour
     // Support PlayerInput Send Messages (parameterless) behavior
     public void OnMenu()
     {
-        UIManagerScript.TogglePanel();
+        if(UIManagerScript.StartPanel.activeSelf)
+        {
+            return;
+        }
+        else
+        {
+            Debug.LogWarning("UIManagerScript reference is not assigned in the inspector.");
+            UIManagerScript.TogglePanel();
+        }
     }
     public void OnInteract(InputValue value)
     {
