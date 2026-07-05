@@ -17,6 +17,9 @@ TagManager:
   - Power
   - coinSpawn
   - SpaceSuit
+  - MiniJet
+  - ToolBox
+  - Ship
   layers:
   - Default
   - TransparentFX
